@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0A1A2F">
+  <title>Alertly</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fondo: #0A1A2F;
+      --texto: #F2F6FB;
+      --suave: #B9C9DD;
+      --acento: #35D0BA;
+      --sobre-acento: #05212B;
+      --tarjeta: #12294A;
+      --borde: #1F3B63;
+      --verde-fondo: #0C3326;
+      --verde: #3DDC97;
+      --ambar-fondo: #3A2704;
+      --ambar: #FFB020;
+      --rojo: #C62828;
+      --rojo-boton: #8E1B1B;
+      --rojo-oscuro: #3B0D0D;
+      --rojo-suave: #FF8A80;
+      --naranja: #FFB27A;
+      --estado: var(--acento);      /* color del círculo y los anillos */
+      --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --titulos: "Space Grotesk", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.45;
+      transition: background-color 0.5s;
+    }
+    body.verde { background: var(--verde-fondo); --estado: var(--verde); }
+    body.ambar { background: var(--ambar-fondo); --estado: var(--ambar); }
+    body.rojo  { background: var(--rojo-oscuro); --estado: var(--rojo-suave); }
+
+    .app {
+      min-height: 100vh;
+      min-height: 100dvh;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 16px 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    svg { display: block; flex-shrink: 0; }
+    a { color: var(--acento); font-weight: 600; }
+
+    /* ===== Encabezado ===== */
+    header { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 40px; }
+    .logo { display: flex; align-items: center; gap: 8px; font-family: var(--titulos);
+      font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+    .logo svg { color: var(--acento); }
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 999px;
+      background: var(--acento); color: var(--sobre-acento);
+      font-size: 15px; font-weight: 600;
+    }
+    .chip[hidden] { display: none; }
+
+    /* ===== Tarjetas ===== */
+    .tarjeta {
+      background: var(--tarjeta);
+      border: 1px solid var(--borde);
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .tarjeta[hidden] { display: none; }
+    .tarjeta h2 { margin: 0 0 10px; font-family: var(--titulos); font-size: 20px; }
+    .tarjeta p { margin: 0 0 12px; color: var(--suave); }
+    .pasos { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; counter-reset: paso; }
+    .pasos li { display: flex; gap: 12px; align-items: flex-start; counter-increment: paso; }
+    .pasos li::before {
+      content: counter(paso);
+      flex: 0 0 28px; height: 28px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--acento); color: var(--sobre-acento);
+      font-weight: 700; font-size: 15px;
+    }
+    .lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+    .lista li { display: flex; gap: 12px; align-items: center; }
+    .lista svg { color: var(--acento); }
+
+    /* ===== Centro: círculo, título y texto ===== */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      text-align: center;
+      padding: 8px 0;
+    }
+    .escena {
+      position: relative;
+      width: min(56vw, 200px);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      margin: 28px 0 12px;
+    }
+    .anillos span {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid var(--estado);
+      opacity: 0.18;
+    }
+    .anillos span:nth-child(2) { transform: scale(1.18); opacity: 0.1; }
+    .anillos span:nth-child(3) { transform: scale(1.36); opacity: 0.05; }
+    #circulo {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: color-mix(in srgb, var(--estado) 14%, transparent);
+      border: 3px solid var(--estado);
+      color: var(--estado);
+      transition: border-color 0.5s, color 0.5s, background-color 0.5s;
+    }
+    #circulo svg { width: 44%; height: 44%; display: none; }
+    body.detenido #circulo .i-mic, body.verde #circulo .i-ok,
+    body.ambar #circulo .i-tri, body.rojo #circulo .i-campana { display: block; }
+
+    /* Anillos que se expanden mientras escucha: lentos en verde, más rápidos en ámbar y rojo */
+    body.verde .anillos span, body.ambar .anillos span, body.rojo .anillos span,
+    #alerta .anillos span {
+      transform: scale(1);
+      opacity: 0;
+      animation: onda var(--onda, 3.6s) ease-out infinite;
+    }
+    body.ambar, body.rojo { --onda: 2s; }
+    .anillos span:nth-child(2) { animation-delay: calc(var(--onda, 3.6s) / -3); }
+    .anillos span:nth-child(3) { animation-delay: calc(var(--onda, 3.6s) / -1.5); }
+    @keyframes onda {
+      0%   { transform: scale(1);   opacity: 0.45; }
+      100% { transform: scale(1.7); opacity: 0; }
+    }
+
+    #titulo { margin: 0; font-family: var(--titulos); font-size: 32px; line-height: 1.15; font-weight: 700; }
+    #frase { margin: 0; font-size: 18px; color: var(--suave); max-width: 340px; }
+    body:not(.detenido) #frase { color: var(--texto); }
+
+    .linea {
+      margin: 0;
+      font-size: 15px;
+      color: var(--suave);
+      min-height: 1.45em;
+    }
+    .linea.alerta, #error {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 14px; border-radius: 12px;
+      font-weight: 600; font-size: 16px;
+    }
+    .linea.alerta { color: var(--naranja); background: rgba(255, 178, 122, 0.12); border: 1px solid rgba(255, 178, 122, 0.45); }
+    #error { color: var(--rojo-suave); background: rgba(255, 138, 128, 0.12); border: 1px solid rgba(255, 138, 128, 0.45); }
+    #error[hidden] { display: none; }
+    /* Línea extra que solo se ve en el estado ámbar */
+    #notaAmbar { display: none; margin: 0; font-size: 15px; color: var(--suave); max-width: 340px; }
+    body.ambar #notaAmbar { display: block; }
+
+    /* ===== Botones ===== */
+    button { font: inherit; }
+    .principal {
+      width: 100%;
+      min-height: 60px;
+      margin-top: 8px;
+      padding: 16px 20px;
+      border: none;
+      border-radius: 16px;
+      background: var(--acento);
+      color: var(--sobre-acento);
+      font-family: var(--titulos);
+      font-size: 21px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .principal.detener {
+      background: transparent;
+      color: var(--texto);
+      border: 2px solid color-mix(in srgb, var(--texto) 55%, transparent);
+    }
+    button:disabled { opacity: 0.6; cursor: wait; }
+    button:focus-visible, summary:focus-visible, a:focus-visible {
+      outline: 3px solid var(--texto); outline-offset: 3px;
+    }
+
+    /* ===== Detalles técnicos ===== */
+    details { color: var(--suave); font-size: 15px; }
+    summary {
+      list-style: none;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      min-height: 56px; padding: 8px;
+      cursor: pointer; font-weight: 600; color: var(--suave);
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary svg { transition: transform 0.2s; }
+    details[open] summary svg { transform: rotate(180deg); }
+    .tecnico { margin-top: 4px; }
+    .tecnico dl { margin: 0 0 16px; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; }
+    .tecnico dt { font-weight: 600; color: var(--texto); }
+    .tecnico dd { margin: 0; overflow-wrap: anywhere; }
+    .secundario {
+      width: 100%; min-height: 56px; padding: 12px 16px;
+      border-radius: 14px; border: 1px solid var(--rojo-suave);
+      background: transparent; color: var(--rojo-suave);
+      font-weight: 600; font-size: 16px; cursor: pointer;
+    }
+    .secundario[hidden] { display: none; }
+
+    footer { font-size: 15px; color: var(--suave); text-align: center; }
+
+    /* Pantalla de inicio: la tarjeta "Antes de empezar" solo antes de escuchar */
+    body:not(.detenido) #antes { display: none; }
+
+    /* ===== Pantalla roja de alarma ===== */
+    #alerta {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      padding: 24px 16px;
+      text-align: center;
+      background: var(--rojo);
+      color: #fff;
+      --estado: #fff;
+      --onda: 1.6s;
+    }
+    #alerta[hidden] { display: none; }
+    #alerta .escena { width: min(48vw, 180px); margin-bottom: 20px; }
+    #alerta .circulo-alerta {
+      position: absolute; inset: 0; border-radius: 50%;
+      display: grid; place-items: center;
+      background: rgba(255, 255, 255, 0.16); border: 3px solid #fff;
+    }
+    #alerta .circulo-alerta svg { width: 46%; height: 46%; }
+    #alerta .titulo { font-family: var(--titulos); font-size: clamp(36px, 11vw, 56px); font-weight: 700; line-height: 1.05; }
+    #alerta .sub { font-size: 24px; font-weight: 600; }
+    #alerta .principal { width: min(100%, 420px); margin-top: 16px; background: #fff; color: var(--rojo-boton); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body class="detenido">
+  <div class="app">
+    <header>
+      <div class="logo">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"/><path d="M7 7a7 7 0 0 0 0 10M17 7a7 7 0 0 1 0 10M4.2 4.2a11 11 0 0 0 0 15.6M19.8 4.2a11 11 0 0 1 0 15.6"/>
+        </svg>
+        Alertly
+      </div>
+      <span id="vinculado" class="chip" hidden>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        Telegram vinculado
+      </span>
+    </header>
+
+    <section id="config" class="tarjeta" hidden>
+      <h2>Vincula Telegram</h2>
+      <p>Abre el bot <a href="https://t.me/Alertly_alarma_bot" target="_blank" rel="noopener">https://t.me/Alertly_alarma_bot</a>,
+        presiona Start y toca el botón Abrir Alertly.</p>
+      <ol class="pasos">
+        <li><span>Abre el bot <a href="https://t.me/Alertly_alarma_bot" target="_blank" rel="noopener">@Alertly_alarma_bot</a>
+          y presiona <b>Start</b>.</span></li>
+        <li><span>Toca <b>"Abrir Alertly"</b>.</span></li>
+        <li><span>Presiona <b>Empezar a escuchar</b>.</span></li>
+      </ol>
+    </section>
+
+    <main>
+      <div class="escena">
+        <div class="anillos" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div id="circulo" aria-hidden="true">
+          <svg class="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5M8.5 21.5h7"/></svg>
+          <svg class="i-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+          <svg class="i-tri" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9.5v4.5M12 17.5h.01"/></svg>
+          <svg class="i-campana" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
+        </div>
+      </div>
+      <h1 id="titulo" aria-live="polite">Escucho por ti.</h1>
+      <p id="frase" aria-live="polite">Si suena una alarma de incendio, te aviso al instante por Telegram.</p>
+      <p id="notaAmbar">Si el sonido continúa unos segundos, puede llegarte un aviso a Telegram.</p>
+      <p id="vida" class="linea"></p>
+      <p id="error" role="alert" hidden>No se pudo enviar el aviso a Telegram</p>
+      <button id="boton" class="principal">Empezar a escuchar</button>
+    </main>
+
+    <section id="antes" class="tarjeta">
+      <h2>Antes de empezar</h2>
+      <ul class="lista">
+        <li>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2.5v5M15 2.5v5M6.5 7.5h11v3a5.5 5.5 0 0 1-11 0zM12 16v5.5"/></svg>
+          Conéctalo al cargador si lo vas a dejar encendido
+        </li>
+        <li>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>
+          Mantén la pantalla encendida
+        </li>
+        <li>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+          Activa el sonido de Telegram
+        </li>
+        <li>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16"/><path d="M6 5v3a6 6 0 0 0 12 0V5"/><circle cx="12" cy="8.5" r="1.5"/><path d="M8 18.5a5 5 0 0 1 8 0M5.5 21a8.5 8.5 0 0 1 13 0"/></svg>
+          Ponlo cerca del detector de humo, en la misma habitación.
+        </li>
+      </ul>
+    </section>
+
+    <details>
+      <summary>
+        Detalles técnicos
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <div class="tecnico tarjeta">
+        <dl>
+          <dt>Clase</dt><dd id="detClase">—</dd>
+          <dt>Confianza</dt><dd id="detConfianza">—</dd>
+          <dt>Prob. alarma</dt><dd id="detAlarma">—</dd>
+        </dl>
+        <button id="desvincular" class="secundario" hidden>Desvincular este dispositivo</button>
+      </div>
+    </details>
+
+    <footer>
+      Este sistema usa inteligencia artificial y puede equivocarse.
+      No reemplaza tu detector de humo.
+    </footer>
+  </div>
+
+  <div id="alerta" role="alert" hidden>
+    <div class="escena">
+      <div class="anillos" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="circulo-alerta" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
+      </div>
+    </div>
+    <div class="titulo">ALARMA DE INCENDIO</div>
+    <div class="sub">Toma precauciones.</div>
+    <button id="entendido" class="principal">Entendido</button>
+  </div>
+
+  <!-- TensorFlow.js y speech-commands: las mismas versiones que usa Teachable Machine -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.4.0/dist/speech-commands.min.js"></script>
+
+  <script>
+    // ===== Ajustes (todos los números están aquí) =====
+    const MODELO_URL = "https://teachablemachine.withgoogle.com/models/cMHiFXlU5/";
+    const UMBRAL_ALARMA = 0.80;                 // lectura "de alarma"
+    const UMBRAL_DUDA = 0.50;                   // desde aquí es ámbar
+    const VENTANA_MS = 3000;                    // ventana deslizante de 3 s
+    const LECTURAS_ROJO = 2;                    // lecturas de alarma en la ventana para rojo
+    const RECORDATORIOS_ALARMA = 2;             // avisos extra mientras siga la alarma
+    const RECORDATORIO_CADA_MS = 60 * 1000;     // cada 60 s
+    const FIN_EVENTO_MS = 30 * 1000;            // la alarma termina tras 30 s sin lecturas de alarma
+    const AMBAR_MINIMO_MS = 5000;               // ámbar seguido para avisar "posible alarma"
+    const ESPERA_POSIBLE_MS = 5 * 60 * 1000;    // máximo un "posible alarma" cada 5 min
+    const SILENCIO_TRAS_EVENTO_MS = 2 * 60 * 1000; // sin "posible alarma" 2 min tras una alarma
+    const SIN_LECTURAS_MS = 5000;               // más de 5 s sin lecturas = dejó de escuchar
+    const REVISAR_CADA_MS = 1000;               // cada cuánto se actualiza la pantalla
+    const CALENTAR_MS = 4 * 60 * 1000;          // cada 4 min despierta la función
+    const SOLAPAMIENTO = 0.5;                   // speech-commands: ~2 lecturas por segundo
+    const VIBRACION = [600, 300, 600];          // patrón de vibración (ms)
+    const VIBRAR_CADA_MS = 3000;                // repetir vibración mientras se ve la alarma
+
+    // ===== Elementos =====
+    const $ = (id) => document.getElementById(id);
+    const boton = $("boton");
+
+    // ===== Textos de la pantalla de inicio =====
+    const TITULO_INICIO = "Escucho por ti.";
+    const FRASE_INICIO = "Si suena una alarma de incendio, te aviso al instante por Telegram.";
+
+    // ===== Estado =====
+    let reconocedor = null, indiceAlarma = -1, indiceRuido = -1;
+    let escuchando = false, wakeLock = null, reloj = null, vibrador = null;
+    let chatId = "", clave = "";
+    let lecturas = [];            // [{t, p}] de los últimos 3 s
+    let ultimaLectura = 0, ultimoRuido = 0;
+    let ambarDesde = 0, ultimoPosible = -Infinity, finUltimoEvento = -Infinity;
+    let evento = null;            // alarma en curso: {inicio, ultimaAlta, maxP, recordatorios}
+    let alertaVista = false;      // ¿ya presionó "Entendido" en esta alarma?
+    let tranquilizadorPendiente = false;
+
+    // ===== chat_id y k: llegan en el enlace del bot y se guardan en este navegador =====
+    const TEXTO_SIN_ENLACE =
+      "Abre el bot https://t.me/Alertly_alarma_bot, presiona Start y toca el botón Abrir Alertly.";
+    const parametros = new URLSearchParams(location.search);
+    const urlChat = parametros.get("chat_id") || "";
+    const urlK = parametros.get("k") || "";
+    if (/^-?\d+$/.test(urlChat) && /^[0-9a-f]{32}$/.test(urlK)) {
+      try {
+        localStorage.setItem("alertly_chat_id", urlChat);
+        localStorage.setItem("alertly_k", urlK);
+      } catch {}
+      chatId = urlChat;
+      clave = urlK;
+    } else {
+      try {
+        chatId = localStorage.getItem("alertly_chat_id") || "";
+        clave = localStorage.getItem("alertly_k") || "";
+      } catch {}
+    }
+    // Quita chat_id y k de la barra de direcciones.
+    if (parametros.has("chat_id") || parametros.has("k")) {
+      history.replaceState(null, "", location.pathname);
+    }
+    const tieneEnlace = () => Boolean(chatId && clave);
+    mostrarConfig(!tieneEnlace());
+
+    // Tarjeta de vinculación visible o no; la etiqueta y el botón de desvincular según haya datos.
+    function mostrarConfig(visible) {
+      $("config").hidden = !visible;
+      $("vinculado").hidden = !tieneEnlace();
+      $("desvincular").hidden = !tieneEnlace();
+    }
+
+    // Desvincular: borra chat_id y k de este navegador, después de confirmar.
+    $("desvincular").addEventListener("click", async () => {
+      const ok = confirm("¿Desvincular este dispositivo?\n\nTendrás que volver a abrir Alertly desde el bot de Telegram.");
+      if (!ok) return;
+      if (escuchando) await detener();
+      try {
+        localStorage.removeItem("alertly_chat_id");
+        localStorage.removeItem("alertly_k");
+      } catch {}
+      chatId = "";
+      clave = "";
+      document.querySelector("details").open = false;
+      mostrarConfig(true);
+      window.scrollTo(0, 0);
+    });
+
+    // ===== Traducir etiquetas del modelo a lo que espera api/alerta.js =====
+    function normalizar(texto) {
+      return texto.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+        .trim().replace(/[\s_]+/g, "_");
+    }
+    function traducirEtiqueta(etiqueta) {
+      const n = normalizar(etiqueta);
+      if (n === "ruido_de_fondo") return "ruido_de_fondo";
+      if (n === "alarma_de_incendio" || n === "alarma_incendio") return "alarma_incendio";
+      return null;
+    }
+
+    // ===== Enviar a /api/alerta (solo clase y confianza, nunca audio) =====
+    async function enviar(clase, confianza) {
+      try {
+        const r = await fetch("/api/alerta", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ clase, confianza: Number(confianza.toFixed(2)), chat_id: chatId, k: clave }),
+        });
+        if (r.status !== 200) {
+          console.error("api/alerta respondió con status", r.status);
+          $("error").hidden = false;
+        } else {
+          $("error").hidden = true;
+        }
+      } catch (e) {
+        console.error("api/alerta: falló la red", e);
+        $("error").hidden = false;
+      }
+    }
+
+    // ===== Cada lectura del modelo (~2 por segundo) =====
+    function alEscuchar(resultado) {
+      const puntajes = resultado.scores;
+      const etiquetas = reconocedor.wordLabels();
+      let mayor = 0;
+      for (let i = 1; i < puntajes.length; i++) if (puntajes[i] > puntajes[mayor]) mayor = i;
+
+      const ahora = Date.now();
+      ultimaLectura = ahora;
+      $("detConfianza").textContent = `${Math.round(puntajes[mayor] * 100)} %`;
+
+      // Etiqueta desconocida: se muestra y no se usa ni se envía.
+      if (!traducirEtiqueta(etiquetas[mayor])) {
+        $("detClase").textContent = `Etiqueta no reconocida: "${etiquetas[mayor]}"`;
+        return;
+      }
+
+      const p = puntajes[indiceAlarma];
+      ultimoRuido = puntajes[indiceRuido];
+      $("detClase").textContent = traducirEtiqueta(etiquetas[mayor]);
+      $("detAlarma").textContent = `${Math.round(p * 100)} %`;
+
+      lecturas.push({ t: ahora, p });
+      if (evento && p >= UMBRAL_ALARMA) {
+        evento.ultimaAlta = ahora;
+        evento.maxP = Math.max(evento.maxP, p);
+      }
+      revisar(ahora);
+    }
+
+    // ===== Decidir color y envíos (con cada lectura y cada segundo) =====
+    function revisar(ahora) {
+      // Ventana deslizante: solo las lecturas de los últimos 3 s.
+      lecturas = lecturas.filter((l) => ahora - l.t <= VENTANA_MS);
+      const altas = lecturas.filter((l) => l.p >= UMBRAL_ALARMA);
+      const max = Math.max(0, ...lecturas.map((l) => l.p));
+      // Verde solo si en los últimos 3 s no hubo ninguna lectura de 0.50 o más.
+      const color = altas.length >= LECTURAS_ROJO ? "rojo" : max >= UMBRAL_DUDA ? "ambar" : "verde";
+
+      // Alarma confirmada: avisar de inmediato al comenzar el evento.
+      if (color === "rojo" && !evento) {
+        evento = { inicio: ahora, ultimaAlta: ahora, maxP: max, recordatorios: 0 };
+        alertaVista = false;
+        tranquilizadorPendiente = false;
+        enviar("alarma_incendio", max);
+      }
+      if (evento) {
+        if (ahora - evento.ultimaAlta >= FIN_EVENTO_MS) {
+          evento = null;                    // 30 s sin lecturas de alarma: terminó
+          finUltimoEvento = ahora;
+        } else if (evento.recordatorios < RECORDATORIOS_ALARMA &&
+                   ahora - evento.inicio >= (evento.recordatorios + 1) * RECORDATORIO_CADA_MS) {
+          evento.recordatorios++;
+          enviar("alarma_incendio", evento.maxP);
+        }
+      }
+
+      // Posible alarma: ámbar 5 s seguidos, máximo 1 cada 5 min, nunca durante o cerca de una alarma.
+      ambarDesde = color === "ambar" ? (ambarDesde || ahora) : 0;
+      if (ambarDesde && ahora - ambarDesde >= AMBAR_MINIMO_MS && !evento &&
+          ahora - finUltimoEvento >= SILENCIO_TRAS_EVENTO_MS &&
+          ahora - ultimoPosible >= ESPERA_POSIBLE_MS) {
+        ultimoPosible = ahora;
+        // Se envía bajo 0.80 para que api/alerta.js lo trate como "no estoy seguro".
+        enviar("alarma_incendio", Math.min(max, UMBRAL_ALARMA - 0.01));
+      }
+
+      // Tranquilizador: una sola vez al iniciar, con la primera lectura en verde.
+      if (tranquilizadorPendiente && color === "verde" && lecturas.length) {
+        tranquilizadorPendiente = false;
+        enviar("ruido_de_fondo", ultimoRuido);
+      }
+
+      pintar(color);
+    }
+
+    // ===== Pantalla =====
+    const VISTAS = {
+      verde: ["Todo tranquilo", "Escuchando tu entorno."],
+      ambar: ["Posible alarma", "Escuché algo que podría ser una alarma. Verifica tu entorno."],
+      rojo:  ["Alarma de incendio", "Toma precauciones."],
+    };
+    function pintar(color) {
+      document.body.className = color;
+      [$("titulo").textContent, $("frase").textContent] = VISTAS[color];
+
+      const verAlerta = Boolean(evento) && !alertaVista;
+      $("alerta").hidden = !verAlerta;
+      if (verAlerta && !vibrador && navigator.vibrate) {
+        navigator.vibrate(VIBRACION);
+        vibrador = setInterval(() => navigator.vibrate(VIBRACION), VIBRAR_CADA_MS);
+      }
+      if (!verAlerta) pararVibracion();
+
+      const segundos = Math.floor((Date.now() - ultimaLectura) / 1000);
+      const callado = Date.now() - ultimaLectura > SIN_LECTURAS_MS;
+      $("vida").textContent = callado ? "El sistema dejó de escuchar" : `Última lectura hace ${segundos} s`;
+      $("vida").classList.toggle("alerta", callado);
+    }
+    function pararVibracion() {
+      if (vibrador) { clearInterval(vibrador); vibrador = null; }
+      if (navigator.vibrate) navigator.vibrate(0);
+    }
+    $("entendido").addEventListener("click", () => {
+      alertaVista = true;
+      $("alerta").hidden = true;
+      pararVibracion();
+    });
+
+    // ===== Mantener la pantalla encendida =====
+    async function pedirWakeLock() {
+      try {
+        if ("wakeLock" in navigator) wakeLock = await navigator.wakeLock.request("screen");
+      } catch {}
+    }
+    document.addEventListener("visibilitychange", () => {
+      if (escuchando && document.visibilityState === "visible") pedirWakeLock();
+    });
+
+    // ===== Iniciar / Detener =====
+    async function iniciar() {
+      if (!tieneEnlace()) {
+        mostrarConfig(true);
+        $("frase").textContent = TEXTO_SIN_ENLACE;
+        window.scrollTo(0, 0);
+        return;
+      }
+      mostrarConfig(false);
+
+      boton.disabled = true;
+      $("frase").textContent = "Cargando…";
+      $("error").hidden = true;
+
+      try {
+        if (!reconocedor) {
+          const r = speechCommands.create("BROWSER_FFT", undefined,
+            MODELO_URL + "model.json", MODELO_URL + "metadata.json");
+          await r.ensureModelLoaded();
+          const etiquetas = r.wordLabels();
+          indiceAlarma = etiquetas.findIndex((e) => traducirEtiqueta(e) === "alarma_incendio");
+          indiceRuido = etiquetas.findIndex((e) => traducirEtiqueta(e) === "ruido_de_fondo");
+          if (indiceAlarma < 0 || indiceRuido < 0) {
+            throw new Error(`Etiquetas no reconocidas: ${etiquetas.join(", ")}`);
+          }
+          reconocedor = r;
+        }
+
+        // listen() pide el permiso de micrófono. El audio se analiza aquí, en el navegador.
+        await reconocedor.listen(alEscuchar, {
+          includeSpectrogram: false,
+          probabilityThreshold: 0,
+          invokeCallbackOnNoiseAndUnknown: true,
+          overlapFactor: SOLAPAMIENTO,
+        });
+
+        escuchando = true;
+        lecturas = [];
+        evento = null;
+        ambarDesde = 0;
+        ultimaLectura = Date.now();
+        tranquilizadorPendiente = true;
+        await pedirWakeLock();
+        reloj = setInterval(() => revisar(Date.now()), REVISAR_CADA_MS);
+        boton.textContent = "Detener";
+        boton.classList.add("detener");
+        pintar("verde");
+      } catch (error) {
+        document.body.className = "detenido";
+        $("titulo").textContent = TITULO_INICIO;
+        $("frase").textContent = error.name === "NotAllowedError"
+          ? "Necesito permiso de micrófono para escuchar."
+          : `Error: ${error.message}`;
+      }
+      boton.disabled = false;
+    }
+
+    async function detener() {
+      if (reconocedor && reconocedor.isListening()) await reconocedor.stopListening();
+      escuchando = false;
+      clearInterval(reloj);
+      evento = null;
+      pararVibracion();
+      if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; }
+      document.body.className = "detenido";
+      $("alerta").hidden = true;
+      $("titulo").textContent = TITULO_INICIO;
+      $("frase").textContent = FRASE_INICIO;
+      $("vida").textContent = "";
+      $("vida").classList.remove("alerta");
+      boton.textContent = "Empezar a escuchar";
+      boton.classList.remove("detener");
+    }
+
+    boton.addEventListener("click", () => (escuchando ? detener() : iniciar()));
+
+    // ===== Despertar la función para que el primer aviso no tarde =====
+    // api/alerta.js responde 405 a un GET: es normal, solo sirve para despertarla.
+    function calentar() { fetch("/api/alerta").catch(() => {}); }
+    calentar();
+    setInterval(calentar, CALENTAR_MS);
+  </script>
+</body>
+</html>
