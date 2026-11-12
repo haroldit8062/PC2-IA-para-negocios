@@ -7,10 +7,9 @@
 **Equipo:**
 - Integrante 1: Harold Inca
 - Integrante 2: Diego Requena
-- Integrante 3: Jennifer Patiño
+
 
 **Producto:** Alertly
-**Fecha de entrega:** 13/11/2026 (PC2)
 **Fuentes de las cifras:** `mvp/evidencia/medicion_modelo.md`, `evaluacion_g1.md`, `pruebas_usuario.md` y `resultados_okr.md`.
 
 ---
