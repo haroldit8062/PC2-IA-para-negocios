@@ -7,9 +7,9 @@
 **Equipo:**
 - Integrante 1: Harold Inca
 - Integrante 2: Diego Requena
-- Integrante 3: Jennifer Patiño
 
-**Fecha de entrega:** PC1 (18/09/2026) · **Actualizada:** 13/11/2026 (PC2)
+
+
 **Tipo de IA del proyecto:** Combinación — Clasificación de audio binaria, Nivel A3 (analítico, con reentrenamiento y medición de mejora) + capa de lenguaje G1 que traduce el resultado en una notificación por Telegram (generativo)
 
 > **Actualización PC2:** este documento conserva la estructura de la PC1 y refleja los datos reales con los que se construyó y se midió el MVP. Lo que cambió respecto de la PC1 está marcado como «PC2».
