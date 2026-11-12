@@ -7,9 +7,8 @@
 **Equipo:**
 - Integrante 1: Harold Inca
 - Integrante 2: Diego Requena
-- Integrante 3: Jennifer Patiño
 
-**Fecha de entrega:** PC1 (18/09/2026) · **Actualizada:** 13/11/2026 (PC2)
+
 **Versión:** v3 — PC2. El alcance, los niveles y los KR de la PC1 se mantienen; se actualizan el diseño real, el prompt, los umbrales, los criterios de éxito y los resultados. Los cambios están marcados como «PC2».
 
 ---
