@@ -2,7 +2,7 @@
 ## Proyecto Integrador de IA para Negocios — AD5018
 ### MVP: Alertly
 
-**Equipo:** Harold Inca · Diego Requena · Jennifer Patiño  
+**Equipo:** Harold Inca · Diego Requena  
 **Semana actual:** 14 (PC2)  
 **PC1:** Semana 6  
 **Periodo principal de construcción:** Semanas 7–13  
