@@ -16,7 +16,6 @@ Alertly detecta con IA la alarma de un detector de humo doméstico y avisa por T
 
 - Harold Inca
 - Diego Requena
-- Jennifer Patiño
 
 **Curso:** AD5018 — Inteligencia Artificial para Negocios · **Framework:** PROMPT v2.0
 
