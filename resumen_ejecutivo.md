@@ -2,7 +2,7 @@
 ## Proyecto Integrador de IA para Negocios — AD5018
 ### MVP: Alertly (PC2)
 
-**Equipo:** Harold Inca · Diego Requena · Jennifer Patiño
+**Equipo:** Harold Inca · Diego Requena 
 **Entrega:** 13/11/2026 · **URL:** https://alertly-alpha.vercel.app · **Bot:** https://t.me/Alertly_alarma_bot
 
 ---
