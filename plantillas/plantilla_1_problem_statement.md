@@ -85,7 +85,6 @@ Las personas con discapacidad auditiva que permanecen solas en el hogar tienen d
 
 El modelo se entrenará en una primera versión, se evaluará su desempeño (matriz de confusión, recall), se recolectarán nuevos datos en las condiciones donde falle más y luego se reentrenará para comparar la mejora. Al trabajar con solo 2 clases, el equipo puede invertir ese esfuerzo de reentrenamiento en profundidad real —más variantes de alarmas, más condiciones de ruido— en vez de dispersarlo entre múltiples categorías.
 
-> **Actualización PC2:** el ciclo se ejecutó de forma iterativa (errores observados → datos dirigidos → reentrenamiento): alarmas de 4 kHz que solo llegaban a ámbar, un grito, un claxon y un ventilador que confundían al modelo. El modelo final se midió con 30 pruebas: recall 80 % (meta 85 %), precisión 100 % y exactitud 90 %. La mejora entre versiones (KR4) no se midió con un conjunto comparable. Ver `medicion_modelo.md`.
 
 ### 3.2 Componente generativo
 
@@ -101,7 +100,6 @@ Con esa información redacta un mensaje breve y claro, enviado como **notificaci
 - Si detecta alarma_incendio con confianza insuficiente → mensaje de **duda**: expresa incertidumbre y pide verificar el entorno, sin decir nunca que no hay alarma.
 - Si detecta ruido_de_fondo → mensaje tranquilizador, solo al iniciar, confirmando que no hay ninguna alarma activa y que el sistema sigue funcionando.
 
-> **Actualización PC2:** en el producto, la **alarma confirmada usa un texto fijo** y no pasa por el modelo de lenguaje, porque en la evaluación de 20 casos los mensajes generados para ese caso fueron inconsistentes (tres oraciones, símbolos, términos técnicos, instrucciones inventadas). Gemini redacta solo los mensajes de duda y tranquilizador, con un texto de respaldo si no responde en 2 s. Ver `evaluacion_g1.md`.
 
 ### 3.3 Patrón de conexión
 
@@ -127,12 +125,6 @@ La prioridad es mejorar la confiabilidad de la detección de la alarma de incend
 - matriz de confusión (2×2);
 - porcentaje de alarmas identificadas correctamente;
 - tiempo de reacción / tiempo hasta la notificación.
-
-> **Actualización PC2:** estas métricas se reportan en `mvp/evidencia/resultados_okr.md`.
-
-### 3.6 Solo si el equipo solicita excepción
-
-No aplica. El equipo sí entrenará un modelo de clasificación de audio.
 
 ---
 
