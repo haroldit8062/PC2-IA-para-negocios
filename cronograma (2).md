@@ -24,7 +24,6 @@ Organizar la construcción, integración, validación y documentación del MVP *
 - entrega mediante **notificaciones por Telegram/WhatsApp**;
 - validación con usuarios y evidencia real.
 
-> **Nota de versión:** este cronograma refleja el ajuste de alcance solicitado por el docente — de 5 a 2 clases, y de una interfaz web/app propia a notificaciones por Telegram/WhatsApp. Esto reduce el trabajo de desarrollo de interfaz (Semana 9) y agrega una tarea nueva de configuración del bot de notificaciones.
 
 ---
 
