@@ -126,5 +126,3 @@ Medidas: el usuario puede **desvincular** su dispositivo desde «Detalles técni
 | ¿Se declaran las limitaciones de la validación? | SÍ |
 
 ---
-
-*Framework PROMPT v2.0 — AD5018 UTEC | Plantilla 4 de 4*
