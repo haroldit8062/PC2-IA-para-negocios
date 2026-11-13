@@ -136,5 +136,3 @@ Los audios de terceros, las grabaciones con voces y las capturas de los particip
 El código se escribió con Claude Code y los borradores de documentos y de plantillas fueron asistidos por Claude. El equipo revisó los datos, las cifras y las decisiones. Gemini es un componente del producto.
 
 ---
-
-**Estado:** PC2 — MVP desplegado y validado con 4 usuarios.
