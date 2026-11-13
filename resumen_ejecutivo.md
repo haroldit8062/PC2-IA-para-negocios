@@ -50,5 +50,3 @@ Dataset de alarma mayormente sintético (86 %), con pocas grabaciones reales; 4 
 Más alarmas reales de distintas marcas y distancias, revisar la regla de decisión para reducir el tiempo, aviso cuando el dispositivo deja de escuchar, mensajes de G1 más cortos, WhatsApp como segundo canal y validar con más personas con discapacidad auditiva.
 
 ---
-
-*Detalle y evidencia en `mvp/evidencia/` y `plantillas/`. Framework PROMPT v2.0 — AD5018 UTEC.*
