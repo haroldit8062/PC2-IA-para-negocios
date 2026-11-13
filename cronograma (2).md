@@ -55,7 +55,6 @@ Responsable principal de:
 - anotación en las sesiones con usuarios;
 - repositorio y presentación.
 
-> **Responsabilidad compartida:** aunque exista un responsable principal por tarea, los dos integrantes deben conocer y poder explicar cualquier fase del proyecto.
 
 ---
 
@@ -95,7 +94,6 @@ Responsable principal de:
 **Responsable principal:** Harold  
 **Apoyo:** Diego
 
-**Criterio de cierre:** todos los archivos de PC1 existen y cuentan la misma historia.
 
 ---
 
@@ -112,7 +110,6 @@ Responsable principal de:
 
 **Responsable:** equipo completo.
 
-**Criterio de cierre:** PC1 entregada y sustentada.
 
 ---
 
@@ -192,7 +189,6 @@ Responsable principal de:
 - probar notificaciones esperadas en ambos escenarios (alarma y ruido de fondo).
 
 **Responsables principales:** Diego y Harold  
-**Apoyo:** —
 
 **Criterio de cierre:** la predicción del modelo termina en una notificación comprensible en el chat del usuario.
 
@@ -342,4 +338,3 @@ La guía del proyecto ubica la sustentación final del MVP en la **Semana 14**. 
 | Entrega de PC2 | 13/11/2026 | Repositorio |
 | Presentación | 14/11/2026 | `presentacion_pc2.pdf` |
 
-Diferencias frente al plan: el equipo trabajó con dos integrantes, Harold y Diego; la validación fue de 4 usuarios y 8 eventos por persona; la comparación V1 contra V2 (KR4) no se midió con un conjunto de prueba común; y el bot y la página se construyeron con Claude Code, con pruebas continuas durante la construcción.
