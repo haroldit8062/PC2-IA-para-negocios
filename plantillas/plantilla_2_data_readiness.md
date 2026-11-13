@@ -59,7 +59,6 @@
 
 Las ≈87 muestras reales de alarma son grabaciones de **detectores de humo reales** hechas con su celular por un amigo del equipo. Las otras alarmas reales (2 peruanas y 2 de Freesound) se usaron solo para probar el modelo. Los audios sintéticos de alarma se diseñaron a partir de las dos grabaciones peruanas que luego se usaron en 10 de las 15 pruebas de alarma, por lo que esas pruebas no son totalmente ciegas; las 5 pruebas con audios de Freesound no se usaron para diseñar nada.
 
-> **PC2 — composición:** la clase de alarma es **mayormente sintética** (86 %); las alarmas reales son pocas (≈87 muestras de entrenamiento y 15 pruebas). Los audios sintéticos se diseñaron a partir de dos grabaciones reales de detectores vendidos en Perú (uno con 4 pitidos rápidos a unos 4 kHz y otro con pulsos rápidos a unos 3.1 kHz). Se excluyeron de la clase alarma las alarmas de edificio y sirenas, y la alarma de monóxido no se usó en ninguna clase. Todo está declarado como limitación.
 
 **Variable objetivo (target):**
 ```
@@ -196,5 +195,3 @@ Plan B: sustituir esos clips por grabaciones propias.
 | ¿Están inventariadas las herramientas del agente? | N/A — no hay agente |
 
 ---
-
-*Framework PROMPT v2.0 — AD5018 UTEC | Plantilla 2 de 4*
