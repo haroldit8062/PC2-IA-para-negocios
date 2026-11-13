@@ -43,7 +43,6 @@ Clases:
 - alarma_incendio (incluye detector de humo)
 - ruido_de_fondo
 
-> **Nota de alcance:** se redujo de 5 a 2 clases tras el feedback del docente, priorizando profundidad en el escenario de mayor riesgo de vida.
 
 ## Generativo
 
@@ -51,7 +50,6 @@ Clases:
 
 Entrada: clase, confianza, criticidad y umbral. Salida: mensaje breve de **duda** o **tranquilizador** (máximo dos oraciones) para Telegram.
 
-> **PC2:** la **alarma confirmada** no pasa por G1: usa un texto fijo. Si Gemini falla o tarda más de 2 s, se envía un texto de respaldo para la duda y el tranquilizador.
 
 ---
 
@@ -236,7 +234,6 @@ Se registró, por evento: color en pantalla, si llegó el aviso, segundos hasta 
 5. Reentrenar.
 6. Comparar versiones.
 
-> **PC2:** los pasos 1 a 5 se ejecutaron de forma iterativa (alarmas de 4 kHz, un grito, un claxon y un ventilador). La comparación cuantitativa (paso 6, KR4) no se midió con un conjunto de prueba común. Ver `resultados_okr.md`.
 
 ---
 
